@@ -1,4 +1,4 @@
-module github.com/72sevenzy2/Xrouter-middlewares
+module github.com/72sevenzy2/Grouter-middlewares
 
 go 1.25.5
 
