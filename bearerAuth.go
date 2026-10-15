@@ -22,7 +22,7 @@ func BearerAuth(AuthKey string) core.Middleware {
 			}
 
 			// continuing if "Bearer " doesnt include in the authkey.
-			if AuthKey != authLab { // check if the authkey is matching
+			if AuthKey != token { // check if the authkey is matching
 				response.JSON(w, http.StatusForbidden, nil, http.StatusText(http.StatusForbidden))
 				return // exit the request
 			}
