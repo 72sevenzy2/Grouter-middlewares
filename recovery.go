@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"fmt"
-	"net/http"
 	"github.com/72sevenzy2/http-router/core"
-	"github.com/72sevenzy2/json-parser/response"
+	"github.com/72sevenzy2/json-parser"
+	"net/http"
 )
 
 // recoverer middleware (for preventing server crashes)

@@ -1,4 +1,4 @@
 github.com/72sevenzy2/http-router v0.0.0-20261015095640-25de4bb5f176 h1:IzrVIw86N9UwW1nkt4tOVih3IuuoLImMlq8p/NhdTbA=
 github.com/72sevenzy2/http-router v0.0.0-20261015095640-25de4bb5f176/go.mod h1:LUSiLb9IvOhvcBdxxr7GTY/zE2m9BE844qe5EBb3Pig=
-github.com/72sevenzy2/json-parser v0.0.0-20260831142858-520fcf6f33e3 h1:0EySVhIdgSYx+CkZivE/B+dWcF9IU8Mi5Hd7I6nIDj0=
-github.com/72sevenzy2/json-parser v0.0.0-20260831142858-520fcf6f33e3/go.mod h1:wA/oKrssLUp44rupBrh/cRqQdl3qcLEoES5jK7+VpVg=
+github.com/72sevenzy2/json-parser v0.0.0-20260913135209-918df9c221ac h1:VfAb+YBf13/GsFEpP+rYMBSn9sKxrqJZVU0FTsVcIUY=
+github.com/72sevenzy2/json-parser v0.0.0-20260913135209-918df9c221ac/go.mod h1:wA/oKrssLUp44rupBrh/cRqQdl3qcLEoES5jK7+VpVg=

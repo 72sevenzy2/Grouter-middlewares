@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/72sevenzy2/http-router/core"
-	"github.com/72sevenzy2/json-parser/response"
+	"github.com/72sevenzy2/json-parser"
 )
 
 type Bucket struct {
@@ -30,8 +30,6 @@ func NewLimiter(limit int, refillRate int) *Limiter {
 
 		Clients: make(map[string]*Bucket),
 	}
-
-
 
 	go l.cleanup(time.Minute * 5) // one cleanup per client
 	return l
