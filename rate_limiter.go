@@ -21,7 +21,7 @@ type Limiter struct {
 
 	mu      sync.Mutex
 	Clients map[string]*Bucket
-} // todo: create init func for this struct
+}
 
 func NewLimiter(limit int, refillRate int) *Limiter {
 	l := &Limiter{
