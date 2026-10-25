@@ -92,13 +92,9 @@ func Logger(confSize uint32) core.Middleware {
 			slog.Debug("request body",
 				"body", string(body),
 			)
-
-			// redacting sensitive header before printing
-			header := r.Header.Clone()
-			header.Del("Authorization")
-
+			headers := RedactSensitiveHeaders(r.Header.Clone())
 			slog.Debug("request headers",
-				"headers", header,
+				"headers", headers,
 			)
 		}
 	}
@@ -130,4 +126,24 @@ func (l *LimitedBuffer) Write(p []byte) (int, error) {
 	}
 
 	return l.buf.Write(p)
+}
+
+// for redacting sensitive request headers before displaying.
+func RedactSensitiveHeaders(headers http.Header) http.Header {
+	// headers are excluded case-insensitively.
+	headers.Del("authorization")
+	headers.Del("proxy-authorization")
+	headers.Del("cookie")
+	headers.Del("set-cookie")
+	headers.Del("x-api-key")
+	headers.Del("x-auth-token")
+	headers.Del("x-access-token")
+	headers.Del("x-refresh-token")
+	headers.Del("x-csrf-token")
+	headers.Del("x-amz-security-token")
+	headers.Del("x-goog-api-key")
+	headers.Del("authentication-info")
+	headers.Del("proxy-authenticate")
+
+	return headers
 }
