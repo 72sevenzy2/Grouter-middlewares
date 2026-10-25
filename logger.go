@@ -16,38 +16,10 @@ type responseWriter struct {
 	size   int
 }
 
-// override WriteHeader with custom response writer struct
-func (rw *responseWriter) WriteHeader(code int) {
-	rw.status = code // saving status code in struct
-	rw.ResponseWriter.WriteHeader(code)
-}
-
-// overriding Write to capture byte size
-func (rw *responseWriter) Write(b []byte) (int, error) {
-	v, err := rw.ResponseWriter.Write(b)
-	rw.size += v // tracking the size in bytes
-	return v, err
-}
-
 // custom limited writer function for Logger() to limit body size reading.
 type LimitedBuffer struct {
 	buf   *bytes.Buffer
 	limit uint32
-}
-
-// custom write func for LimitedBuffer, (allocates new slice based on truncated size on original slice)
-func (l *LimitedBuffer) Write(p []byte) (int, error) {
-	remaining := l.limit - uint32(l.buf.Len())
-
-	if remaining <= 0 {
-		return len(p), nil
-	}
-
-	if len(p) > int(remaining) { // check if []byte that is being written to l.buf exceeds remaining.
-		p = p[:remaining] // truncate
-	}
-
-	return l.buf.Write(p)
 }
 
 // plain structs to work with default values.
@@ -81,6 +53,7 @@ func Logger(confSize uint32) core.Middleware {
 				}
 			}
 
+			// todo: replace with buf pool
 			// limit size
 			lm := &LimitedBuffer{
 				buf:   &buf,
@@ -129,4 +102,32 @@ func Logger(confSize uint32) core.Middleware {
 			)
 		}
 	}
+}
+
+// WriteHeader() implements the http.ResponseWriter interface.
+func (rw *responseWriter) WriteHeader(code int) {
+	rw.status = code
+	rw.ResponseWriter.WriteHeader(code)
+}
+
+// Write() implements the http.ResponseWriter interface.
+func (rw *responseWriter) Write(b []byte) (int, error) {
+	v, err := rw.ResponseWriter.Write(b)
+	rw.size += v // tracking the size in bytes
+	return v, err
+}
+
+// Write() implements the io.Writer interface (for LimitedBuffer{})
+func (l *LimitedBuffer) Write(p []byte) (int, error) {
+	remaining := l.limit - uint32(l.buf.Len())
+
+	if remaining <= 0 {
+		return len(p), nil
+	}
+
+	if len(p) > int(remaining) { // check if []byte that is being written to l.buf exceeds remaining.
+		p = p[:remaining] // truncate
+	}
+
+	return l.buf.Write(p)
 }
