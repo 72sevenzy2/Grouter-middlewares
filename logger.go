@@ -47,7 +47,6 @@ func Logger(confSize uint32) core.Middleware {
 			)
 
 			// buffer for comparison in limited writer Write().
-			// 			buf := bytes.Buffer{}
 			buf := LoggerBuf.Get().(*bytes.Buffer)
 			buf.Reset()
 
@@ -63,7 +62,6 @@ func Logger(confSize uint32) core.Middleware {
 				}
 			}
 
-			// todo: replace with buf pool
 			// limit size
 			lm := &LimitedBuffer{
 				buf:   buf,
@@ -126,8 +124,7 @@ func (rw *responseWriter) Write(b []byte) (int, error) {
 
 // Write() implements the io.Writer interface (for LimitedBuffer{})
 func (l *LimitedBuffer) Write(p []byte) (int, error) {
-	remaining := l.limit - uint32(l.buf.Len())
-
+	remaining := int(l.limit) - l.buf.Len()
 	if remaining <= 0 {
 		return len(p), nil
 	}
