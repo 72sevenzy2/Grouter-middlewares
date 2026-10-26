@@ -2,11 +2,13 @@ package middleware
 
 import (
 	"bytes"
-	"github.com/72sevenzy2/http-router/core"
 	"io"
 	"log/slog"
 	"net/http"
+	"sync"
 	"time"
+
+	"github.com/72sevenzy2/http-router/core"
 )
 
 // custom responseWriter type to capture status code and request byte size.
@@ -27,6 +29,12 @@ type bodySize struct {
 	size uint32
 }
 
+var LoggerBuf = sync.Pool{
+	New: func() any {
+		return new(bytes.Buffer)
+	},
+}
+
 func Logger(confSize uint32) core.Middleware {
 	return func(hf core.HandlerFunc) core.HandlerFunc {
 		return func(w http.ResponseWriter, r *core.Request) {
@@ -39,7 +47,9 @@ func Logger(confSize uint32) core.Middleware {
 			)
 
 			// buffer for comparison in limited writer Write().
-			buf := bytes.Buffer{}
+			// 			buf := bytes.Buffer{}
+			buf := LoggerBuf.Get().(*bytes.Buffer)
+			buf.Reset()
 
 			// setting default value first for request body size
 			var opt bodySize
@@ -56,7 +66,7 @@ func Logger(confSize uint32) core.Middleware {
 			// todo: replace with buf pool
 			// limit size
 			lm := &LimitedBuffer{
-				buf:   &buf,
+				buf:   buf,
 				limit: opt.size + 1,
 			}
 
@@ -85,7 +95,7 @@ func Logger(confSize uint32) core.Middleware {
 				"duration", endTime,
 				"status_code", rw.status,
 				"response_body_size_bytes", rw.size,
-				"request_body_size_bytes", len(buf.Bytes()),
+				"request_body_size_bytes", len(body),
 				"body_truncated", truncated,
 			)
 
@@ -96,6 +106,7 @@ func Logger(confSize uint32) core.Middleware {
 			slog.Debug("request headers",
 				"headers", headers,
 			)
+			LoggerBuf.Put(buf)
 		}
 	}
 }
