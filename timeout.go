@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"context"
-	"time"
+	"github.com/72sevenzy2/grouter/core"
 	"net/http"
-	"github.com/72sevenzy2/http-router/core"
+	"time"
 )
 
 // timeout middleware
@@ -13,8 +13,7 @@ func Timeout(t time.Duration) core.Middleware {
 	return func(hf core.HandlerFunc) core.HandlerFunc {
 		return func(w http.ResponseWriter, r *core.Request) {
 			ctx, cancel := context.WithTimeout(r.Context(), t) // initialising timeout (in seconds)
-
-			defer cancel() // cancelling at the end of the func (current handler)
+			defer cancel()                                     // cancelling at the end of the func (current handler)
 
 			// shallow copy of original request, (preserving other Request{} fields)
 			req := *r

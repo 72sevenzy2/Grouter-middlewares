@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/72sevenzy2/http-router/core"
+	"github.com/72sevenzy2/grouter/core"
 )
 
 // custom responseWriter type to capture status code and request byte size.

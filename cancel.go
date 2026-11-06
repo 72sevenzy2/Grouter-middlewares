@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/72sevenzy2/http-router/core"
+	"github.com/72sevenzy2/grouter/core"
 )
 
 func Canceller() (core.Middleware, context.CancelFunc) {

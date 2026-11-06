@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/72sevenzy2/http-router/core"
+	"github.com/72sevenzy2/grouter/core"
 	"github.com/72sevenzy2/json-parser"
 	"net/http"
 )
