@@ -50,7 +50,7 @@ func (l *Limiter) cleanup(t time.Duration) {
 	}
 }
 
-func (l *Limiter) RateLimiter() core.Middleware {
+func (l *Limiter) RateLimiter(maxRequests float64) core.Middleware {
 	return func(hf core.HandlerFunc) core.HandlerFunc {
 		return func(w http.ResponseWriter, r *core.Request) {
 			clientIp := r.RemoteAddr
@@ -73,7 +73,7 @@ func (l *Limiter) RateLimiter() core.Middleware {
 			c.tokens = min(c.tokens, l.Limit)
 			c.refilledAt = time.Now()
 
-			if c.tokens < 1 { // 100 requests cap for now
+			if c.tokens < maxRequests {
 				w.Header().Set("Retry-After", strconv.Itoa(int(time.Duration(float64(time.Second)/l.RefillRate))))
 
 				l.mu.Unlock()
